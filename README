@@ -1,0 +1,22 @@
+Popa Bianca
+
+Dataplane Router
+
+Implementare: procesul de dirijare, Longest Prefix Match eficient si
+protocolul ICMP.
+
+Se verifica daca routerul a primit un pachet de tip IPv4 sau ARP. 
+
+Daca este de tip IPv4, se verifica daca routerul este destinatia si, in acest 
+caz, se va trimite un mesaj de tip ICMP apeland functia send_icmp, implementata
+in lib.c. Altfel, se verifica integritatea pachetului. Daca pachetul a fost 
+corupt, el trebuie aruncat. Se interogheaza tabela de rutare pentru a sti unde 
+trimitem pachetul. Daca in urma apelului functiei get_best_route (unde este 
+implementat Longest Prefix Match cu cautare binara) nu se gaseste o cale, atunci 
+se trimite un mesaj ICMP de tip "Destination unreachable", apeland functia 
+send_icmp_err, implementata in lib.c. Pentru pachetele cu campul TTL cu valoarea
+0 sau 1 se trimite un mesaj ICMP de tip "Time exceeded". Altfel, se decrementeaza
+TTL si se recalculeaza checksumul pe pachet. Se interogheaza tabela ARP pentru a 
+afla adresa MAC destinatie si se copiaza in headerul Ethernet. Apoi, se afla 
+adresa MAC pe care se trimite pachetul apeland functia get_interface_mac. In 
+final, pachetul este trimis mai departe.
